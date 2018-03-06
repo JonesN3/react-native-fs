@@ -255,7 +255,8 @@ public class RNFSManager extends ReactContextBaseJavaModule {
   @ReactMethod
   public void readApkExpansionFile(String filepath, Promise promise) throws IOException {
     Context ctx = getReactApplicationContext();
-    ZipResourceFile APKExpansionFile = APKExpansionSupport.getAPKExpansionZipFile(ctx, 4, 0);
+    int version = BuildConfig.VERSION_CODE;
+    ZipResourceFile APKExpansionFile = APKExpansionSupport.getAPKExpansionZipFile(ctx, version, 0);
     for (ZipResourceFile.ZipEntryRO child : APKExpansionFile.getAllEntries()) {;
       AssetFileDescriptor asset = child.getAssetFileDescriptor();
       if (asset != null) {
