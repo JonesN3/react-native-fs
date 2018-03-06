@@ -33,6 +33,9 @@ import java.security.MessageDigest;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.google.android.vending.expansion.zipfile.ZipResourceFile.ZipEntryRO;
+
+
 public class RNFSManager extends ReactContextBaseJavaModule {
 
   private static final String RNFSDocumentDirectoryPath = "RNFSDocumentDirectoryPath";
@@ -241,6 +244,26 @@ public class RNFSManager extends ReactContextBaseJavaModule {
         try {
           stream.close();
         } catch (IOException ignored) {
+        }
+      }
+    }
+  }
+
+  @ReactMethod
+  public void readApkExpansionFile(String filepath, Promise promise) throws IOException {
+    ZipFileUtil APKExpansionFile = APKExpansionUtil.getAPKExpansionZipFile(4, 0);
+    for (ZipFileUtil.ZipEntryRO child : APKExpansionFile.getAllEntries()) {;
+      AssetFileDescriptor asset = child.getAssetFileDescriptor();
+      if (asset != null) {
+        String name = child.mFileName;
+        if (name.equals(filepath)) {
+          FileInputStream fis = null;
+          fis = asset.createInputStream();
+          byte[] buffer = new byte[fis.available()];
+          fis.read(buffer);
+          String base64Content = Base64.encodeToString(buffer, Base64.NO_WRAP);
+          promise.resolve(base64Content);;
+          fis.close();
         }
       }
     }
