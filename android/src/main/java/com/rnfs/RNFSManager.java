@@ -1,5 +1,6 @@
 package com.rnfs;
 
+import android.content.Context;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
 import android.net.Uri;
@@ -33,6 +34,8 @@ import java.security.MessageDigest;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.google.android.vending.expansion.zipfile.APKExpansionSupport;
+import com.google.android.vending.expansion.zipfile.ZipResourceFile;
 import com.google.android.vending.expansion.zipfile.ZipResourceFile.ZipEntryRO;
 
 
@@ -251,8 +254,9 @@ public class RNFSManager extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void readApkExpansionFile(String filepath, Promise promise) throws IOException {
-    ZipFileUtil APKExpansionFile = APKExpansionUtil.getAPKExpansionZipFile(4, 0);
-    for (ZipFileUtil.ZipEntryRO child : APKExpansionFile.getAllEntries()) {;
+    Context ctx = getReactApplicationContext();
+    ZipResourceFile APKExpansionFile = APKExpansionSupport.getAPKExpansionZipFile(ctx, 4, 0);
+    for (ZipResourceFile.ZipEntryRO child : APKExpansionFile.getAllEntries()) {;
       AssetFileDescriptor asset = child.getAssetFileDescriptor();
       if (asset != null) {
         String name = child.mFileName;
